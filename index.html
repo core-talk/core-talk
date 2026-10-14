@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Core Talk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2F4;--surf:#fff;--ink:#14232B;--mute:#5B6B74;--line:#D5DEE3;--acc:#0B7A75;--acc-ink:#fff;--warm:#B8700F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A1F;--surf:#17262D;--ink:#E7EFF2;--mute:#97A9B2;--line:#2A3D46;--acc:#3DB8AE;--acc-ink:#0F1A1F;--warm:#E8A24A}}
+:root[data-theme="dark"]{--bg:#0A1216;--surf:#111E25;--ink:#EEF4F6;--mute:#9DB0B9;--line:#263A45;--acc:#2DD4BF;--acc-ink:#06201D;--warm:#FBBF24}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(800px 380px at 8% -8%,rgba(45,212,191,.14),transparent),var(--bg);color:var(--ink);font:16px/1.5 "Instrument Sans",system-ui,sans-serif}
+h1,h2,.clock{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif}
+header{display:flex;justify-content:space-between;align-items:end;gap:12px;padding:20px clamp(16px,4vw,40px) 8px}
+h1{margin:0;font-size:clamp(28px,5vw,40px);letter-spacing:-.02em;line-height:1}
+.sub{margin:6px 0 0;color:var(--mute);max-width:46ch}
+.streak{background:var(--surf);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:600;white-space:nowrap}
+.app{display:grid;grid-template-columns:1fr 290px;gap:20px;padding:12px clamp(16px,4vw,40px) 40px;align-items:start}
+main{min-width:0}
+aside{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+aside h3{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+li .t{flex:1;min-width:0;font-size:14px;line-height:1.3}
+li small{display:block;color:var(--mute)}
+li audio{width:100%}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}
+.empty{color:var(--mute);font-size:14px;margin:6px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.chip{border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:999px;padding:5px 11px 5px 9px;font:inherit;font-size:13.5px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[aria-pressed="false"]{opacity:.45}
+.chip[aria-pressed="true"]{border-color:var(--acc)}
+.quick{font-size:13px;color:var(--mute);margin-bottom:14px}
+.quick button{background:none;border:0;color:var(--acc);font:inherit;cursor:pointer;padding:0 6px 0 0;text-decoration:underline}
+.card{display:grid;grid-template-columns:22px 1fr;background:var(--surf);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-height:340px}
+.strata{background:repeating-linear-gradient(to bottom,hsl(var(--h,180) 55% 48%) 0 16px,hsl(var(--h,180) 50% 38%) 16px 24px,hsl(var(--h,180) 35% 62%) 24px 34px)}
+.body{padding:clamp(18px,4vw,36px);display:flex;flex-direction:column;gap:14px}
+.cat{color:var(--mute);font-size:14px;font-weight:600}
+h2{margin:0;font-size:clamp(26px,4.6vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700}
+.twist{margin:0;color:var(--mute)}
+.twist b{color:var(--warm)}
+.clock{font-size:clamp(54px,12vw,96px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.clock.rec{color:var(--warm)}
+.live{color:var(--warm);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+button.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surf);color:var(--ink);padding:10px 18px;border-radius:10px;cursor:pointer}
+button.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+button.sm{font:inherit;font-size:13px;border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:3px 9px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#note{min-height:22px;margin:10px 2px 0;color:var(--warm);font-weight:600}
+.set{margin:0 0 18px;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px 20px}
+.set h3{margin:0;font-size:19px}
+.set p{margin:2px 0 12px;color:var(--mute);font-size:14px}
+.dur{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dur label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:15px}
+.dur .in{display:flex;align-items:baseline;gap:8px;background:var(--bg);border:2px solid var(--warm);border-radius:12px;padding:8px 14px}
+.dur input{width:72px;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:32px;font-weight:700;background:none;border:0;color:var(--warm)}
+.dur .u{color:var(--mute);font-size:16px;font-weight:400}
+.timebox{background:var(--bg);border:2px solid var(--warm);border-radius:14px;padding:16px 22px;display:flex;flex-direction:column;gap:2px}
+.lbl{font-weight:600;color:var(--warm);font-size:16px}
+.plan{display:inline-block;align-self:flex-start;border:1px solid var(--warm);color:var(--warm);border-radius:999px;padding:4px 14px;font-weight:600;font-size:14.5px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.stats span{border:1px solid var(--acc);color:var(--acc);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600}
+.more{max-width:1120px;margin:0 auto;padding:10px clamp(16px,4vw,40px) 50px;display:grid;gap:40px}
+.more h2{font-size:clamp(24px,3.4vw,32px);margin:0 0 6px}
+.more>section>p{margin:0 0 14px;color:var(--mute);max-width:70ch}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.box h3{margin:0 0 6px;font-size:18px}
+.box p{margin:0;color:var(--mute)}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.fc{display:flex;flex-direction:column;border-left:6px solid var(--c);background:var(--surf);border-radius:10px;padding:10px 12px;font-weight:600}
+.fc span{color:var(--mute);font-size:13.5px;font-weight:400}
+details{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:8px 0 0;color:var(--mute)}
+footer{border-top:1px solid var(--line);padding:22px clamp(16px,4vw,40px);color:var(--mute);font-size:14px;text-align:center}
+.score{display:flex;gap:18px;align-items:center;background:var(--bg);border:2px solid var(--acc);border-radius:14px;padding:14px 20px}
+.big{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:clamp(54px,12vw,84px);font-weight:700;line-height:1;color:var(--acc)}
+.big small{font-size:.35em;color:var(--mute);font-weight:500}
+.band{font-weight:700;font-size:22px}
+.sumry{color:var(--mute)}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(110px,160px) 1fr 52px;gap:10px;align-items:center;font-size:14.5px}
+.track{height:10px;background:var(--bg);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--acc)}
+.bar b{text-align:right}
+.review h3{margin:4px 0 0;font-size:20px}
+.review h4{margin:12px 0 2px;font-size:15.5px;color:var(--warm)}
+.rl{list-style:disc;padding-left:20px;margin:0}
+.rl li{display:list-item;border:0;padding:3px 0}
+li.pl{cursor:pointer;border-radius:8px}
+li.pl:hover{background:var(--bg)}
+li.pl:focus-visible{outline:3px solid var(--acc)}
+span.sm{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:3px 9px;color:var(--ink)}
+.tip{margin:0 0 14px;padding:10px 14px;border-left:4px solid var(--warm);background:var(--surf);border-radius:8px;font-size:14.5px}
+.fine{margin:0;color:var(--mute);font-size:13.5px}
+@media (max-width:480px){.dur{grid-template-columns:1fr}.bar{grid-template-columns:1fr 52px}.bar .track{grid-column:1/-1;order:3}}
+.priv{margin:16px 2px 0;color:var(--mute);font-size:13.5px}
+audio{width:100%}
+@media (max-width:820px){.app{grid-template-columns:1fr}aside{position:static;max-height:none;order:2}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Core Talk</h1>
+    <p class="sub">Draw a topic, research it, then speak about it for one minute. Listen back and get sharper, one topic at a time.</p>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center"><button class="sm" id="theme">Light mode</button><div class="streak" id="streak">0-day streak</div></div>
+</header>
+<div class="app">
+  <main>
+    <section class="set">
+      <h3>Set your timers</h3>
+      <p>Choose how long you research and how long you speak. Your choice is remembered.</p>
+      <div class="dur">
+        <label>Research time<span class="in"><input id="rmin" type="number" min="1" max="60" aria-label="Research minutes"><span class="u">minutes</span></span></label>
+        <label>Speaking time<span class="in"><input id="ssec" type="number" min="15" max="300" step="5" aria-label="Speaking seconds"><span class="u">seconds</span></span></label>
+      </div>
+    </section>
+    <p class="tip"><b>Tip:</b> Record in a quiet place for more precise scores. Background noise can hide your words and make your pauses harder to measure.</p>
+    <div class="chips" id="chips"></div>
+    <div class="quick"><button data-a="all">Select all</button><button data-a="none">Clear</button></div>
+    <section class="card" id="card"><div class="strata" id="strata"></div><div class="body" id="stage"></div></section>
+    <div id="note" role="status"></div>
+    <p class="priv">Core Talk saves your recordings only on this device and never on a server. To score your talk, your browser's own speech recognition turns your speech into text. Chrome and Edge do this through their maker's online service.</p>
+  </main>
+  <aside>
+    <h3>Already spoken <button class="sm" data-a="clear">Clear</button></h3>
+    <ul id="hist"></ul>
+    <p class="empty" id="hempty">Topics you speak on will show up here.</p>
+  </aside>
+</div>
+<div class="more">
+  <section>
+    <h2>How a Core Talk round works</h2>
+    <p>Each round takes about fifteen minutes and trains the skill most people skip: explaining an unfamiliar idea out loud, clearly and in your own words.</p>
+    <div class="steps">
+      <div class="box"><h3>Draw a topic</h3><p>Pick the fields you care about and draw a random topic you haven't spoken on yet, plus a speaking twist to keep it interesting.</p></div>
+      <div class="box"><h3>Research it</h3><p>Use the research timer to read up on the topic and note down three points. Short, focused research beats long, unfocused reading.</p></div>
+      <div class="box"><h3>Speak and record</h3><p>When time starts, talk about the topic without notes. The app records you until your speaking time runs out.</p></div>
+      <div class="box"><h3>Get your score</h3><p>Core Talk rates your talk out of 100 and writes a short review of what worked and what to fix. Play your recording back to hear it for yourself.</p></div>
+    </div>
+  </section>
+  <section>
+    <h2>A simple shape for a one-minute talk</h2>
+    <p>If you freeze, use this structure. It works for any topic, from a UPSC concept to a machine you've never seen.</p>
+    <div class="steps">
+      <div class="box"><h3>Open (10 seconds)</h3><p>Say what the topic is in one plain sentence, or start with a surprising fact or a real-life example.</p></div>
+      <div class="box"><h3>Explain (40 seconds)</h3><p>Cover your three points. For each one, give a reason, a number, or an example so it sticks.</p></div>
+      <div class="box"><h3>Close (10 seconds)</h3><p>Finish with one sentence on why it matters. A clear ending makes you sound confident.</p></div>
+    </div>
+  </section>
+  <section>
+    <h2>Why practise this way</h2>
+    <p>Reading about a topic feels like understanding it, but speaking shows what you actually know. When you have to explain something aloud within a minute, the gaps appear immediately. Hearing your own recording is uncomfortable at first and very useful, because you notice filler words, long pauses, and unclear sentences that you'd never catch while talking. Practising on a wide range of topics also trains you for interviews, group discussions, presentations, and viva exams, where you rarely get to choose the subject.</p>
+  </section>
+  <section>
+    <h2>Fields you can practise</h2>
+    <p>Turn fields on or off above. Every field has its own set of topics, and topics you have already spoken on never come back.</p>
+    <div class="fields" id="fields"></div>
+  </section>
+  <section>
+    <h2>Questions people ask</h2>
+    <details><summary>Is Core Talk really free?</summary><p>Yes. There is nothing to sign up for and nothing to pay.</p></details>
+    <details><summary>How is my score calculated?</summary><p>Out of 100: pace and length (20), fluency, meaning few filler and repeated words (20), pauses (15), depth, meaning examples, reasons and specific numbers or names (20), topic coverage, meaning whether you used the topic's key terms and precise vocabulary (15), and structure, meaning an opening, signposting and a close (10). Pace and pauses come from your voice, and the rest comes from the transcript. The score cannot check whether your facts are correct, so treat it as feedback on how you communicate. Speech recognition can miss technical words and often drops filler sounds like 'um', so real fillers may be undercounted.</p></details>
+    <details><summary>Where are my recordings stored?</summary><p>Only in your own browser, on your own device. Core Talk has no server and never receives your recordings. You can delete one recording or clear everything from the app. One thing to know: to score your talk, Chrome and Edge convert your speech to text using their maker's online speech service, so that audio is handled under Google's or Microsoft's privacy terms. Firefox and Safari don't support this, so there you get only a partial score.</p></details>
+    <details><summary>Why can't I see my old recordings on another phone or browser?</summary><p>Because they never leave the device where you recorded them. Each browser keeps its own list. Clearing your browser data will also remove them.</p></details>
+    <details><summary>How can I get the most precise score?</summary><p>Record in a quiet place, hold your phone or microphone at a steady distance, and speak clearly at a normal pace. Background noise, music or other voices can hide your words from speech recognition and make your pauses harder to measure, which lowers the accuracy of your score.</p></details>
+    <details><summary>The microphone isn't working. What should I do?</summary><p>Allow microphone access when your browser asks. If you blocked it earlier, open the site settings in your browser, allow the microphone for this page, and reload.</p></details>
+    <details><summary>Can I change how long I research and speak?</summary><p>Yes. Use the timer boxes at the top. The default is ten minutes of research and one minute of speaking.</p></details>
+  </section>
+</div>
+<footer>Core Talk is free to use and never stores your recordings on a server.</footer>
+<script>
+const CATS={
+"UPSC":"Basic Structure Doctrine|Anti-defection law|Finance Commission|Article 356 and President's Rule|Cooperative federalism|Public Interest Litigation|Delimitation of constituencies|Doctrine of pith and substance|Fiscal deficit|Inflation targeting|GST Council|Minimum Support Price|Balance of payments|Priority sector lending|Demonetisation and its effects|Monetary policy transmission|Western Disturbances|Monsoon break periods|Rain shadow regions|Ocean currents and fisheries|Laterite soils|Himalayan glacial lakes|Delta formation|Tropical cyclones in the Bay of Bengal|Permanent Settlement of 1793|Indus Valley drainage systems|Bhakti movement|Revolt of 1857|Subsidiary Alliance|Champaran Satyagraha|Mauryan administration|Chola maritime trade",
+"Environment & Ecology":"Biodiversity hotspots|Carbon credits|Ramsar wetlands|Eutrophication|Mangrove ecosystems|Coral bleaching|Eco-sensitive zones|E-waste management|Carbon sequestration in soil|Plastic pollution in oceans|Sustainable urban planning|Air quality index|Wildlife corridors",
+"Mining & Geology":"Longwall mining|Coal bed methane|Rock mass rating|Acid mine drainage|Ventilation in underground mines|Rare earth elements|Mine subsidence|Blasting vibration control|Open-pit slope stability|Mineral beneficiation|Tailings dam safety|Mine land reclamation|Gold extraction by cyanidation",
+"Technical Terms":"Latency versus bandwidth|Factor of safety|Entropy|Hysteresis|Resonance|Torque versus power|Signal-to-noise ratio|Tensile versus compressive strength|Throughput|Load balancing|Thermal conductivity|Efficiency versus effectiveness|Calibration versus accuracy",
+"Inventions":"The printing press|The transistor|Penicillin|The steam engine|The Haber-Bosch process|The lithium-ion battery|The World Wide Web|The Bessemer process|The telephone|Smallpox vaccination|The magnetic compass|The Wright brothers' airplane|The integrated circuit",
+"Science":"Why the sky is blue|CRISPR gene editing|Superconductivity|Photosynthesis efficiency|Plate tectonics|Dark matter|The placebo effect|Quantum entanglement|Black holes|The greenhouse effect|Radioactive half-life|Evolution by natural selection|The periodic table",
+"Space & Defence":"Chandrayaan missions|Hypersonic missiles|Satellite navigation systems|Space debris|Reusable rockets|Radar stealth|Cyber warfare|Nuclear deterrence|Mars colonisation|Aircraft carriers|Satellite remote sensing|Drone warfare|Missile defence systems",
+"Computing & AI":"How neural networks learn|Blockchain consensus|Cloud computing|Encryption basics|Edge computing|Algorithmic bias|Quantum computing|Open-source software|Cybersecurity threats|Big data analytics|The Internet of Things|Machine learning versus deep learning|Digital privacy",
+"Energy":"Green hydrogen|Nuclear fusion|Pumped hydro storage|Solar panel efficiency|Smart grids|Clean coal technology|Geothermal power|Energy storage and the duck curve|Wind turbine design|Biofuels|Nuclear waste disposal|Electric vehicle charging|Energy efficiency in buildings",
+"Engineering & Machines":"How a jet engine works|Reinforced concrete|Hydraulic systems|Bridge design|3D printing in manufacturing|Gear ratios|Metal fatigue|Robotics in factories|Earthquake-resistant buildings|Tunnel boring machines|Welding techniques|Water treatment plants|Electric versus combustion engines",
+"Health & Medicine":"How vaccines train immunity|Antibiotic resistance|Telemedicine|Gut microbiome|Sleep and memory|Generic drugs|Mental health stigma|Organ donation|Diabetes prevention|Public health and sanitation|Medical imaging|Nutrition myths|Pandemic preparedness",
+"Business & Finance":"Startup unit economics|Supply chain resilience|Compound interest|Mutual funds versus index funds|Brand loyalty|Gig economy|Venture capital|Cryptocurrency risks|Inflation and daily life|Franchise models|Digital marketing|Stock market basics|Why startups fail",
+"Law & Ethics":"Right to privacy|Whistleblower protection|Euthanasia debate|Intellectual property rights|Environmental justice|Ethics of AI decisions|Consumer rights|Conflict of interest|Limits of free speech|Data protection laws|The capital punishment debate|Judicial independence|Animal rights",
+"Sports":"Sports science and recovery|Doping controls|Cricket's DRS technology|Olympic host city economics|Mental toughness in athletes|Women's sports funding|Marathon physiology|Rise of e-sports|Sports injuries and prevention|Nutrition for athletes|Fan culture and rivalries|Sports diplomacy|Grassroots talent scouting",
+"Arts & Culture":"Madhubani painting|Classical dance forms of India|Film censorship|Oral storytelling traditions|Architecture of stepwells|Folk music preservation|Handloom heritage|Street art|Indian classical music|Cinema and social change|Museum curation|Traditional festivals|The art of calligraphy",
+"Psychology & Society":"Confirmation bias|Social media and attention|Urban migration|Peer pressure|Habit formation|Generational gaps|Public speaking anxiety|Misinformation spread|Stress management|Introversion versus extroversion|Cancel culture|Work-life balance|Social comparison",
+"Everyday Curiosities":"Why we yawn|How GPS knows where you are|Why ice floats|How elevators stay safe|Why bread rises|How UPI payments work|Why onions make us cry|How a microwave heats food|Why the sea is salty|How a refrigerator works|Why we dream|How airplanes stay up|Why leaves change colour"
+};
+const TW=["Explain it to a ten-year-old","Open with a real-life example","Argue only one side","Include one number or fact","End with a question for the listener","Avoid filler words like 'um' and 'basically'","Tell it as a short story","Compare it to something unrelated"];
+const names=Object.keys(CATS),ALL=[];
+names.forEach(c=>CATS[c].split("|").forEach(t=>ALL.push({t,c})));
+const $=s=>document.querySelector(s),hue=c=>names.indexOf(c)*18;
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let spoken=ls.get("spoken",[]),active=new Set(ls.get("cats",names)),cfg=ls.get("cfg",{r:10,s:60});
+let cur=null,phase="idle",tm=null,rec=null,chunks=[],stream=null,url=null,db=null,sr=null,tr='',levels=[],lv=null,actx=null,res=null,pcm=[],rate=44100,prc=null;
+const fmt=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+const day=t=>t.toLocaleDateString("en-CA");
+function msg(t){$("#note").textContent=t||""}
+/* recordings live in this browser's IndexedDB only */
+const openDB=()=>new Promise(res=>{try{const q=indexedDB.open("coretalk",1);q.onupgradeneeded=()=>q.result.createObjectStore("r",{keyPath:"id"});q.onsuccess=()=>{db=q.result;res()};q.onerror=()=>res()}catch(e){res()}});
+const store=m=>db.transaction("r",m).objectStore("r");
+const keys=()=>new Promise(res=>{if(!db)return res([]);try{const q=store("readonly").getAllKeys();q.onsuccess=()=>res(q.result);q.onerror=()=>res([])}catch(e){res([])}});
+const getRec=id=>new Promise(res=>{if(mem[id])return res({blob:mem[id]});if(!db)return res(null);try{const q=store("readonly").get(id);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}});
+const mem={};const putRec=r=>{mem[r.id]=r.blob;if(db)try{store("readwrite").put(r)}catch(e){}};
+const delRec=id=>{delete mem[id];if(db)try{store("readwrite").delete(id)}catch(e){}};
+function streak(){const d=new Set(ls.get("days",[]));let n=0,t=new Date();if(!d.has(day(t)))t.setDate(t.getDate()-1);while(d.has(day(t))){n++;t.setDate(t.getDate()-1)}return n}
+function drawStreak(){const n=streak();$("#streak").textContent=n+"-day streak"}
+function drawChips(){$("#chips").innerHTML=names.map(c=>`<button class="chip" data-c="${esc(c)}" aria-pressed="${active.has(c)}"><span class="dot" style="background:hsl(${hue(c)} 55% 48%);margin:0"></span>${esc(c)}</button>`).join("")}
+async function drawHist(){
+  const k=new Set(await keys());
+  $("#hempty").style.display=spoken.length?"none":"block";
+  $("#hist").innerHTML=spoken.map(s=>`<li data-id="${s.id}"${k.has(s.id)||mem[s.id]?' data-a="play" class="pl" tabindex="0"':''}><span class="dot" style="background:hsl(${hue(s.c)} 55% 48%)"></span><div class="t">${esc(s.t)}<small>${esc(s.c)}${s.score!=null?', score '+s.score+'/100':''}</small></div>${k.has(s.id)||mem[s.id]?`<span class="sm">Play</span>`:""}</li>`).join("");
+}
+function render(){
+  const el=$("#stage");
+  $("#card").style.setProperty("--h",cur?hue(cur.c):180);
+  let h="";
+  if(cur)h+=`<div class="cat">${esc(cur.c)}</div><h2>${esc(cur.t)}</h2><p class="twist"><b>Twist:</b> ${esc(cur.w)}</p>`;
+  else h+=`<h2>Ready when you are.</h2><p class="twist">Choose your fields above, then draw a topic.</p>`;
+  if(phase==="drawn")h+=`<span class="plan">Research ${cfg.r} min, then speak ${cfg.s} sec</span>`;
+  if(phase==="research")h+=`<div class="timebox"><div class="lbl">Research time left</div><div class="clock" id="clock"></div></div><p class="twist">Read up on the topic and jot down three points you want to cover. Find a quiet spot before you speak, because background noise lowers score accuracy.</p>`;
+  if(phase==="speak")h+=`<div class="timebox"><div class="lbl">Speaking time left</div><div class="clock rec" id="clock"></div><div class="live">Recording now</div></div>`;
+  if(phase==="analyse")h+=`<div class='timebox'><div class='lbl'>Scoring your talk</div><p class='twist'>Listening to your recording. This takes a few seconds.</p></div>`;
+  if(phase==="done")h+=`<audio controls src='${url}'></audio>`+resultHTML();
+  const b={idle:`<button class="btn pri" data-a="draw">Draw a topic</button>`,
+   drawn:`<button class="btn pri" data-a="research">Start research (${cfg.r} min)</button><button class="btn" data-a="ready">Skip to speaking</button><button class="btn" data-a="draw">Different topic</button>`,
+   research:`<button class="btn pri" data-a="ready">I'm ready, start speaking</button>`,
+   speak:`<button class="btn pri" data-a="stop">Stop recording</button>`,analyse:'',
+   done:`<button class="btn pri" data-a="draw">Next topic</button><button class="btn" data-a="delrec">Delete this recording</button>`}[phase];
+  el.innerHTML=h+`<div class="row">${b}</div>`;
+}
+function wavBlob(){
+  if(!pcm.length)return null;
+  let len=0;pcm.forEach(c=>len+=c.length);
+  if(len<rate/2)return null;
+  const all=new Float32Array(len);let o=0;pcm.forEach(c=>{all.set(c,o);o+=c.length});
+  let pk=0;for(let i=0;i<len;i++){const x=Math.abs(all[i]);if(x>pk)pk=x}
+  const g=pk>0.002?Math.min(10,0.7/pk):1;
+  const r=rate/16000,m=Math.floor(len/r),d=new DataView(new ArrayBuffer(44+m*2));
+  const W=(p,s)=>{for(let i=0;i<s.length;i++)d.setUint8(p+i,s.charCodeAt(i))};
+  W(0,'RIFF');d.setUint32(4,36+m*2,true);W(8,'WAVE');W(12,'fmt ');d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);d.setUint32(24,16000,true);d.setUint32(28,32000,true);d.setUint16(32,2,true);d.setUint16(34,16,true);W(36,'data');d.setUint32(40,m*2,true);
+  for(let i=0;i<m;i++){const a=Math.floor(i*r),b=Math.max(a+1,Math.floor((i+1)*r));let s=0;for(let j=a;j<b&&j<len;j++)s+=all[j];const v=Math.max(-1,Math.min(1,s/(b-a)*g));d.setInt16(44+i*2,v<0?v*32768:v*32767,true)}
+  pcm=[];return new Blob([d],{type:'audio/wav'});
+}
+const STOP=new Set('about their there these those which would could should where while being have this that with from they them then than what when your into also very much more most some such only just over each other because versus'.split(' '));
+const FILL=new Set(['um','uh','er','erm','ah','hmm','basically','actually','literally','honestly']);
+const TIP={'Pace and length':'Time yourself once: about 120 words fit comfortably in one minute.','Fluency':'Replace every filler word with a one-second silent pause.','Pauses and flow':'Plan your three points during research so you never hunt for the next one.','Pauses':'Plan your three points during research so you never hunt for the next one.','Depth and examples':'Prepare one example, one reason and one number before you speak.','Topic coverage':'Write down three key terms while researching and use each one out loud.','Structure':'Use open, explain, close: one line in, three points, one line out.','Time used':'Keep talking until the timer ends. Add one more example if you run out early.'};
+const cl=(x,a,b)=>Math.max(a,Math.min(b,x));
+const cnt=(t,r)=>(t.match(r)||[]).length;
+function score(text,topic,lv){
+  const t=text.toLowerCase().replace(/\s+/g,' ').trim(),w=t.match(/[a-z0-9'’]+/g)||[],n=w.length,target=cfg.s;
+  const A={active:lv.length/10,lp:0,longest:0,ratio:0,lead:0,ok:lv.length>=20};
+  if(A.ok){const s=[...lv].sort((x,y)=>x-y),p20=s[Math.floor(s.length*.2)],p90=s[Math.floor(s.length*.9)],thr=Math.max(.008,p20+(p90-p20)*.15),v=lv.map(x=>x>=thr),f=v.indexOf(true),l=v.lastIndexOf(true);
+    if(f>=0){A.lead=f/10;A.active=(l-f+1)/10;let run=0,sil=0;for(let i=f;i<=l;i++){if(!v[i]){run++;sil++}else{if(run>=15){A.lp++;A.longest=Math.max(A.longest,run/10)}run=0}}A.ratio=sil/(l-f+1)}else A.ok=false}
+  const pau=A.ok?cl(15-A.lp*3-Math.max(0,A.ratio-.3)*20,0,15):0;
+  const out={text:text.trim(),parts:[],good:[],fix:[],nxt:[],total:0,note:'Scores are estimates from automatic transcription. They do not check whether your facts are correct, and technical terms may be misheard. Record in a quiet place for the most precise score.'};
+  const pl=A.lp===1?'pause':'pauses';
+  if(n<8){
+    out.partial=true;
+    if(A.ok){
+      const tu=Math.min(1,A.active/target);
+      out.parts=[{k:'Pauses and flow',v:Math.round(pau/15*60),m:60},{k:'Time used',v:Math.round(tu*40),m:40}];
+      out.total=out.parts[0].v+out.parts[1].v;
+      if(A.lp>0)out.fix.push(`You had ${A.lp} long ${pl} (longest ${A.longest.toFixed(1)} seconds). Take a short breath and use a linking word instead of silence.`);else out.good.push('Your delivery had no long pauses.');
+      if(tu<.7)out.fix.push(`You spoke for about ${Math.round(A.active)} of your ${target} seconds. Try to use the full time.`);else out.good.push('You used most of your speaking time.');
+    }else out.fix.push('We could not hear enough speech to score. Check that your microphone is working and speak a little louder.');
+    out.note='Speech recognition is not available in this browser, or it could not pick up your words, so only pauses and time used were scored. Use Chrome or Edge for the full score.';
+  }else{
+    const act=A.ok?A.active:target,wpm=n/(act/60),expected=112*target/60;
+    const pace=12*(wpm<110?cl((wpm-60)/50,0,1):cl(1-(wpm-160)/70,0,1))+8*Math.min(1,n/expected);
+    const pf=cnt(t,/\b(you know|i mean|kind of|sort of)\b/g),fl=w.filter(x=>FILL.has(x)),st=w.filter((x,i)=>i&&x===w[i-1]&&x.length>1&&!/\d/.test(x)).length;
+    const fr=(fl.length+pf+st)/n*100,flu=20*cl(1-fr/8,0,1);
+    const ex=cnt(t,/\b(for example|for instance|such as|imagine|consider)\b/g),rs=cnt(t,/\b(because|therefore|as a result|which means|so that|due to|this is why|that is why|hence|thus)\b/g),nm=cnt(t,/\b\d[\d,.]*\b/g);
+    const cw=w.filter(x=>x.length>=4&&!STOP.has(x)),div=cw.length?new Set(cw).size/cw.length:0;
+    const con=Math.min(1,ex/2)*5+Math.min(1,rs/3)*5+Math.min(1,nm/2)*5+5*cl((div-.45)/.35,0,1)*Math.min(1,n/expected);
+    const tw=(topic.t.toLowerCase().match(/[a-z]{4,}/g)||[]).filter(x=>!STOP.has(x)),hit=tw.filter(x=>w.some(y=>y.startsWith(x.slice(0,5)))),miss=tw.filter(x=>!hit.includes(x));
+    const cov=tw.length?hit.length/tw.length:1,tech=new Set(w.filter(x=>x.length>=9&&!STOP.has(x))).size,top=8*cov+Math.min(7,tech*.7);
+    const f25=w.slice(0,25).join(' '),openOk=tw.some(x=>f25.includes(x.slice(0,5))),trn=cnt(t,/\b(first|firstly|second|secondly|third|next|then|also|moreover|furthermore|however|in addition|finally)\b/g),cls=cnt(t,/\b(in conclusion|to sum up|to summarise|to summarize|in short|overall|in summary|to conclude|that is why|this matters)\b/g);
+    const str=(openOk?3:0)+Math.min(1,trn/4)*4+(cls?3:0);
+    out.parts=[{k:'Pace and length',v:pace,m:20},{k:'Fluency',v:flu,m:20},{k:'Pauses',v:pau,m:15},{k:'Depth and examples',v:con,m:20},{k:'Topic coverage',v:top,m:15},{k:'Structure',v:str,m:10}];
+    out.total=Math.round(out.parts.reduce((s,p)=>s+p.v,0));
+    if(wpm<110)out.fix.push(`You spoke at about ${Math.round(wpm)} words per minute, which is slow. Aim for 110 to 160 and keep your sentences moving.`);
+    else if(wpm>160)out.fix.push(`You spoke at about ${Math.round(wpm)} words per minute, which is fast. Slow down on key terms so listeners can follow.`);
+    else out.good.push(`Your pace of about ${Math.round(wpm)} words per minute is easy to follow.`);
+    if(n<expected*.7)out.fix.push(`You said about ${n} words and had room for more. Use the full time with one more example or reason.`);
+    if(fr>3){const mc={};fl.forEach(x=>mc[x]=(mc[x]||0)+1);const m1=Object.keys(mc).sort((a,b)=>mc[b]-mc[a])[0];out.fix.push(`Filler and repeated words made up ${fr.toFixed(1)}% of your talk${m1?` (you used '${m1}' most)`:''}. Pause silently instead of filling the gap.`)}else out.good.push('You used very few filler words.');
+    if(A.ok){
+      if(A.lp>0)out.fix.push(`You had ${A.lp} long ${pl} (longest ${A.longest.toFixed(1)} seconds). Take a short breath and use a linking word like 'so' or 'next' instead of silence.`);else out.good.push('Your delivery was smooth, with no long pauses.');
+      if(A.lead>3)out.fix.push(`You took ${Math.round(A.lead)} seconds to start. Plan your first sentence during research.`);
+    }
+    if(ex&&rs&&nm)out.good.push('You backed your points with examples, reasons and specifics.');
+    else{if(!ex)out.fix.push(`Add a concrete example, introduced with 'for example'.`);if(!rs)out.fix.push(`Explain why, using words like 'because' or 'which means'.`);if(!nm)out.fix.push('Add a number, date or name to make a claim specific.')}
+    if(cov<.6)out.fix.push(`You did not mention ${miss.slice(0,3).join(', ')} from the topic. Say its key terms early and often.`);else out.good.push('You stayed on the topic.');
+    if(tech<4)out.fix.push('Use more precise technical terms from your research. Note down three key terms while you research.');
+    if(!openOk)out.fix.push('Open by naming the topic in your first sentence.');
+    if(trn<2)out.fix.push('Signpost your points with words like first, next and finally.');
+    if(!cls)out.fix.push('End with a closing sentence, such as why the topic matters.');
+    if(openOk&&trn>=2&&cls)out.good.push('Your talk had a clear opening, flow and ending.');
+  }
+  out.band=out.total>=85?'Excellent':out.total>=70?'Good':out.total>=50?'Developing':'Needs practice';
+  const ps=[...out.parts].sort((a,b)=>a.v/a.m-b.v/b.m);
+  out.summary=ps.length>1&&!out.partial?`Your strongest area was ${ps[ps.length-1].k.toLowerCase()} and your weakest was ${ps[0].k.toLowerCase()}.`:'Only part of your talk could be scored.';
+  out.nxt=ps.slice(0,2).map(p=>TIP[p.k]).filter(Boolean);
+  return out;
+}
+function resultHTML(){
+  if(!res)return '';
+  const r=res,ul=a=>a.length?`<ul class='rl'>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
+  const bars=r.parts.map(p=>`<div class='bar'><span>${p.k}</span><div class='track'><i style='width:${Math.round(p.v/p.m*100)}%'></i></div><b>${Math.round(p.v)}/${p.m}</b></div>`).join('');
+  return `<div class='score'><div class='big'>${r.total}<small>/100</small></div><div><div class='band'>${r.band}</div><div class='sumry'>${esc(r.summary)}</div></div></div>`+
+   (bars?`<div class='bars'>${bars}</div>`:'')+
+   `<div class='review'><h3>Your review</h3>${r.good.length?`<h4>What worked</h4>${ul(r.good)}`:''}${r.fix.length?`<h4>What to improve</h4>${ul(r.fix)}`:''}${r.nxt.length?`<h4>Try this next time</h4>${ul(r.nxt)}`:''}</div>`+
+   `<details><summary>See your transcript</summary><p>${esc(r.text||'No speech was recognised.')}</p></details><p class='fine'>${esc(r.note)}</p>`;
+}
+function run(sec,end){clearInterval(tm);let t=sec;const d=()=>{const c=$("#clock");if(c)c.textContent=fmt(t)};d();tm=setInterval(()=>{t--;d();if(t<=0){clearInterval(tm);end()}},1000)}
+function draw(){
+  clearInterval(tm);msg();
+  const pool=ALL.filter(x=>active.has(x.c)&&!spoken.some(s=>s.t===x.t));
+  if(!active.size){msg("Select at least one field first.");return}
+  if(!pool.length){msg("You have spoken on every topic in these fields. Add more fields or clear your history.");return}
+  const cs=[...new Set(pool.map(p=>p.c))],cc=cs[Math.floor(Math.random()*cs.length)],pc=pool.filter(p=>p.c===cc),x=pc[Math.floor(Math.random()*pc.length)];
+  cur={t:x.t,c:x.c,w:TW[Math.floor(Math.random()*TW.length)]};phase="drawn";render();
+}
+function research(){phase="research";render();run(cfg.r*60,ready)}
+async function ready(){
+  clearInterval(tm);msg();
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){msg("Microphone is blocked. Allow mic access in your browser settings and try again.");return}
+  if(!window.MediaRecorder){msg("This browser can't record audio. Try Chrome, Edge, Firefox or Safari 14.1+.");return}
+  const mt=["audio/webm","audio/mp4"].find(t=>MediaRecorder.isTypeSupported(t))||"";
+  cur.id=Date.now();spoken.unshift({id:cur.id,t:cur.t,c:cur.c});ls.set("spoken",spoken);
+  const dd=new Set(ls.get("days",[]));dd.add(day(new Date()));ls.set("days",[...dd]);drawStreak();
+  rec=new MediaRecorder(stream,mt?{mimeType:mt}:{});chunks=[];
+  rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  rec.onstop=async()=>{
+    const blob=wavBlob()||new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+    putRec({id:cur.id,blob});if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(blob);if(!db)msg('Your browser is not allowing Core Talk to save recordings, so they will last only until you close this page. Open Core Talk in its own browser tab to keep them.');if(levels.length>20&&Math.max(...levels)<0.01)msg('This recording seems silent. Check that the right microphone is selected and not muted.');
+    await new Promise(r=>{if(!sr)return r();let d=0;const f=()=>{if(!d){d=1;r()}};sr.onend=f;try{sr.stop()}catch(_){f()}setTimeout(f,1500)});
+    res=score(tr,cur,levels);
+    const sp=spoken.find(x=>x.id===cur.id);if(sp){sp.score=res.total;ls.set('spoken',spoken)}
+    phase="done";render();drawHist();
+  };
+  tr='';levels=[];sr=null;pcm=[];
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){try{sr=new SR();sr.lang='en-IN';sr.continuous=true;sr.interimResults=false;
+    sr.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)tr+=e.results[i][0].transcript+' '};
+    sr.onend=()=>{if(phase==='speak')try{sr.start()}catch(_){}};sr.start()}catch(_){sr=null}}
+  try{actx=new(window.AudioContext||window.webkitAudioContext)();rate=actx.sampleRate;pcm=[];const an=actx.createAnalyser();an.fftSize=1024;const ms=actx.createMediaStreamSource(stream);ms.connect(an);const buf=new Float32Array(an.fftSize);
+    try{prc=actx.createScriptProcessor(4096,1,1);prc.onaudioprocess=e=>{pcm.push(new Float32Array(e.inputBuffer.getChannelData(0)))};ms.connect(prc);prc.connect(actx.destination)}catch(_){prc=null}
+    lv=setInterval(()=>{an.getFloatTimeDomainData(buf);let q=0;for(const v of buf)q+=v*v;levels.push(Math.sqrt(q/buf.length))},100)}catch(_){}
+  rec.start();phase="speak";render();drawHist();run(cfg.s,stop);
+}
+function stop(){clearInterval(tm);clearInterval(lv);if(phase!=='speak')return;phase='analyse';render();if(rec&&rec.state!=="inactive")rec.stop();if(stream)stream.getTracks().forEach(t=>t.stop());if(actx)try{actx.close()}catch(_){}}
+document.addEventListener("click",async e=>{
+  if(e.target.closest("audio"))return;
+  const c=e.target.closest("[data-c]");
+  if(c){const n=c.dataset.c;active.has(n)?active.delete(n):active.add(n);ls.set("cats",[...active]);drawChips();return}
+  const a=e.target.closest("[data-a]");if(!a)return;
+  const k=a.dataset.a;
+  if(k==="draw")draw();
+  else if(k==="research")research();
+  else if(k==="ready")ready();
+  else if(k==="stop")stop();
+  else if(k==="all"){active=new Set(names);ls.set("cats",names);drawChips()}
+  else if(k==="none"){active=new Set();ls.set("cats",[]);drawChips()}
+  else if(k==="delrec"){delRec(cur.id);if(url){URL.revokeObjectURL(url);url=null}phase="drawn";render();drawHist();msg("Recording deleted from this device.")}
+  else if(k==="clear"){if(confirm("Clear your spoken list and all saved recordings on this device?")){[...(await keys()),...Object.keys(mem).map(Number)].forEach(delRec);spoken=[];ls.set("spoken",[]);drawHist()}}
+  else if(k==="play"){
+    const id=Number(a.dataset.id),li=a.closest("li"),old=li.querySelector("audio");
+    if(old){if(old.paused)old.play();else old.pause();return}
+    const r=await getRec(id);
+    if(!r){msg("That recording is no longer on this device.");return}
+    const au=document.createElement("audio");au.controls=true;au.src=URL.createObjectURL(r.blob);document.querySelectorAll('#hist audio').forEach(x=>x.pause());li.appendChild(au);au.play().catch(()=>msg('Your browser could not play this recording.'));
+  }
+});
+$("#rmin").value=cfg.r;$("#ssec").value=cfg.s;
+$("#rmin").addEventListener("change",e=>{cfg.r=Math.min(60,Math.max(1,+e.target.value||10));e.target.value=cfg.r;ls.set("cfg",cfg);if(phase==="drawn")render()});
+$("#ssec").addEventListener("change",e=>{cfg.s=Math.min(300,Math.max(15,+e.target.value||60));e.target.value=cfg.s;ls.set("cfg",cfg)});
+const total=ALL.length;
+$("#stats").innerHTML=`<span>${names.length} fields</span><span>${total} topics</span><span>Scored out of 100</span><span>Recordings saved only on your device</span>`;
+$("#fields").innerHTML=names.map(c=>`<div class="fc" style="--c:hsl(${hue(c)} 55% 48%)">${esc(c)}<span>${CATS[c].split("|").length} topics</span></div>`).join("");
+const tb=$("#theme"),setT=v=>{document.documentElement.dataset.theme=v;tb.textContent=v==="dark"?"Light mode":"Dark mode";ls.set("theme",v)};
+tb.onclick=()=>setT(document.documentElement.dataset.theme==="dark"?"light":"dark");setT(ls.get("theme","dark"));
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('li.pl')){e.preventDefault();e.target.click()}});
+drawChips();render();drawStreak();openDB().then(drawHist);
+</script>
+</body>
+</html>
