@@ -4,7 +4,7 @@
 
 Core Talk is a free speaking-practice app for students and aspirants. It gives you uncommon topics from 17 fields, so you practise explaining ideas clearly instead of repeating the same ones.
 
-**Try it now: https://YOUR-USERNAME.github.io/core-talk/**
+**Try it now: https://core-talk.github.io/core-talk/**
 
 ![Core Talk screenshot](screenshot.png)
 
